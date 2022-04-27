@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 @Entity
@@ -28,6 +29,11 @@ public class Post {
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
+	
+	@PrePersist
+	public void prePersist() {
+		setDatetime(LocalDateTime.now());
+	}
 
 	public Post() {
 	}
