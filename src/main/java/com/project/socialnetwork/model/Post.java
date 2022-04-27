@@ -13,24 +13,23 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "POSTS")
-public class posts {
+public class Post {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(name = "post_text")
 	private String text;
-	
+
 	@Column(name = "datetime")
 	private LocalDateTime datetime;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	public posts() {
-		// TODO Auto-generated constructor stub
+	public Post() {
 	}
 
 	public Long getId() {
