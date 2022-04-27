@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.project.socialnetwork.dto.CreateUserRequest;
+import com.project.socialnetwork.fieldError.ResponseErro;
 import com.project.socialnetwork.model.User;
 import com.project.socialnetwork.repository.UserRepository;
 
@@ -47,10 +48,8 @@ public class UserController {
 		Set<ConstraintViolation<CreateUserRequest>> validateParams = validator.validate(userRequest);
 		
  		if(!validateParams.isEmpty()) {
- 			ConstraintViolation<CreateUserRequest> erro = validateParams.stream().findAny().get();
- 			String erroMessage = erro.getMessage();
- 			
-			return Response.status(400).entity(erroMessage).build();
+ 			ResponseErro responseErro = ResponseErro.createFromValidation(validateParams);
+			return Response.status(400).entity(responseErro).build();
 		}
 		
 		user.setName(userRequest.getName());
