@@ -21,57 +21,39 @@ import com.project.socialnetwork.repository.UserRepository;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class PostController {
-  
+
 	private UserRepository repository;
 	private PostRepository postRepository;
-	
+
 	@Inject
 	public PostController(UserRepository repository, PostRepository postRepository) {
- 		this.repository = repository;
+		this.repository = repository;
 		this.postRepository = postRepository;
 	}
-	
+
 	@POST
 	@Transactional
 	public Response savePost(@PathParam("userId") Long userId, CreatePostRequest request) {
 		User user = repository.findById(userId);
-		if(user == null) {
+		if (user == null) {
 			return Response.status(Response.Status.NOT_FOUND).build();
 		}
-		
+
 		Post post = new Post();
 		post.setText(request.getText());
- 		post.setUser(user);
- 
-		
- 		postRepository.persist(post);
- 		
+		post.setUser(user);
+
+		postRepository.persist(post);
+
 		return Response.status(Response.Status.CREATED).build();
-	}
-	
-
-	public UserRepository getRepository() {
-		return repository;
-	}
-
-	public void setRepository(UserRepository repository) {
-		this.repository = repository;
-	}
-
-	public PostRepository getPostRepository() {
-		return postRepository;
-	}
-
-	public void setPostRepository(PostRepository postRepository) {
-		this.postRepository = postRepository;
 	}
 
 	@GET
 	public Response listPost(@PathParam("userId") Long userId) {
 		User user = repository.findById(userId);
-	    if(user == null) {
-	    	return Response.status(Response.Status.NOT_FOUND).build();
-	    }
-	    return Response.ok().build();
+		if (user == null) {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+		return Response.ok().build();
 	}
 }
