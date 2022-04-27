@@ -16,7 +16,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.project.socialnetwork.dto.CreateUserRequest;
 import com.project.socialnetwork.fieldError.ResponseErro;
@@ -80,9 +79,9 @@ public class UserController {
 	  if(user != null) {
 		  repository.delete(user);
 	  } else {
-		  return Response.status(Status.NOT_FOUND).build();
+		  return Response.noContent().build();
 	  }
-	  return Response.ok().build();
+	  return Response.status(Response.Status.NOT_FOUND).build();
 	}
 	
 	@PUT
@@ -94,7 +93,7 @@ public class UserController {
 		if(user != null) {
 			user.setName(userData.getName());
 			user.setAge(userData.getAge());
-			return Response.ok().build();
+			return Response.noContent().build();
  		}
 		return Response.status(Response.Status.NOT_FOUND).build();
 	}
