@@ -6,7 +6,7 @@
  
 <p align="center">
  
-<a href="https://app.travis-ci.com/github/Mario23junior/Social-Network-api" target="_blank"> [![Build Status](https://app.travis-ci.com/Mario23junior/Social-Network-api.svg?branch=main)](https://app.travis-ci.com/Mario23junior/solar-system-api.svg?branch=main)
+<a href="https://app.travis-ci.com/github/Mario23junior/Social-Network-api" target="_blank"> [![Build Status](https://app.travis-ci.com/Mario23junior/Social-Network-api.svg?branch=main)](https://app.travis-ci.com/github/Mario23junior/Social-Network-api)
 <a href="https://en.wikipedia.org/wiki/Representational_state_transfer"><img src="https://img.shields.io/badge/interface-REST-brightgreen.svg?longCache=true&style=flat-square" target="_blank"></a>
 </p>
   
