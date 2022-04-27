@@ -1,4 +1,4 @@
-package com.project.socialnetwork.socialnetwork;
+package com.project.socialnetwork.controller;
 
 import java.util.Set;
 
