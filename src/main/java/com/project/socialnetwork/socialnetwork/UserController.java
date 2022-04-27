@@ -12,6 +12,9 @@ import javax.ws.rs.core.Response;
 import com.project.socialnetwork.dto.CreateUserRequest;
 import com.project.socialnetwork.model.User;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+
 @Path("/users")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -30,6 +33,7 @@ public class UserController {
 	
 	@GET
 	public Response ListAllUsers() {
-		return Response.ok().build();
+		PanacheQuery<PanacheEntityBase> query = User.findAll();
+		return Response.ok(query.list()).build();
 	}
 }
