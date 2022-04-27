@@ -1,7 +1,11 @@
 package com.project.socialnetwork.socialnetwork;
 
+import java.util.Set;
+
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -25,17 +29,30 @@ import io.quarkus.hibernate.orm.panache.PanacheQuery;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserController {
    
-	@Inject
-	private UserRepository repository;
 	
-    public UserController(UserRepository repository) {
+	private UserRepository repository;
+	private Validator validator;
+	
+	@Inject
+    public UserController(UserRepository repository,Validator validator) {
     	this.repository = repository;
+    	this.validator = validator;
  	}
 	
 	@POST
 	@Transactional
 	public Response createUser(CreateUserRequest userRequest) {
 		User user = new User();
+		 
+		Set<ConstraintViolation<CreateUserRequest>> validateParams = validator.validate(userRequest);
+		
+ 		if(!validateParams.isEmpty()) {
+ 			ConstraintViolation<CreateUserRequest> erro = validateParams.stream().findAny().get();
+ 			String erroMessage = erro.getMessage();
+ 			
+			return Response.status(400).entity(erroMessage).build();
+		}
+		
 		user.setName(userRequest.getName());
 		user.setAge(userRequest.getAge());
 		
