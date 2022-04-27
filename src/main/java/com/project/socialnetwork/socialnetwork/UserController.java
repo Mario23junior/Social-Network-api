@@ -48,15 +48,21 @@ public class UserController {
 		Set<ConstraintViolation<CreateUserRequest>> validateParams = validator.validate(userRequest);
 		
  		if(!validateParams.isEmpty()) {
- 			ResponseErro responseErro = ResponseErro.createFromValidation(validateParams);
-			return Response.status(400).entity(responseErro).build();
-		}
+ 			 Response ResponseError = ResponseErro
+ 					 .createFromValidation(validateParams)
+ 					 .withStatusCode(ResponseErro.DEFINICIAN_STATUS_RESPONSE);
+ 			 return ResponseError;
+  		}
 		
 		user.setName(userRequest.getName());
 		user.setAge(userRequest.getAge());
 		
 		repository.persist(user);
-		return Response.ok(user).build();
+		
+		return Response
+				.status(Response.Status.CREATED.getStatusCode())
+				.entity(user)
+				.build();
 	}
 	
 	@GET
@@ -93,6 +99,3 @@ public class UserController {
 		return Response.status(Response.Status.NOT_FOUND).build();
 	}
 }
-
- 
-

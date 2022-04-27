@@ -6,11 +6,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
+import javax.ws.rs.core.Response;
 
 public class ResponseErro {
 
+	public static final Integer DEFINICIAN_STATUS_RESPONSE = 422; 
+	
 	private String message;
 	private Collection<FieldErro> erros;
+	
 
 	public ResponseErro(String message, Collection<FieldErro> erros) {
 		super();
@@ -46,6 +50,11 @@ public class ResponseErro {
 
 	public void setErros(Collection<FieldErro> erros) {
 		this.erros = erros;
+	}
+	
+	public Response withStatusCode(int code) {
+		return Response.status(code).entity(this).build();
+		
 	}
 
 }
