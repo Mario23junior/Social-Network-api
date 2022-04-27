@@ -2,7 +2,6 @@ package com.project.socialnetwork.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -22,7 +21,6 @@ import com.project.socialnetwork.model.User;
 import com.project.socialnetwork.repository.PostRepository;
 import com.project.socialnetwork.repository.UserRepository;
 
- 
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.panache.common.Sort.Direction;
