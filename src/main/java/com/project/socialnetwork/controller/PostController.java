@@ -1,5 +1,9 @@
 package com.project.socialnetwork.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -12,10 +16,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.project.socialnetwork.dto.CreatePostRequest;
+import com.project.socialnetwork.dto.PostResponse;
 import com.project.socialnetwork.model.Post;
 import com.project.socialnetwork.model.User;
 import com.project.socialnetwork.repository.PostRepository;
 import com.project.socialnetwork.repository.UserRepository;
+
+ 
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Sort;
+import io.quarkus.panache.common.Sort.Direction;
 
 @Path("/users/{userId}/posts")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -54,6 +64,14 @@ public class PostController {
 		if (user == null) {
 			return Response.status(Response.Status.NOT_FOUND).build();
 		}
-		return Response.ok().build();
+		  PanacheQuery<Post> query = postRepository.find("user", Sort.by("dateTime",Direction.Descending),user);
+		  List<Post> list = query.list();
+		  
+		  List<PostResponse> listData = list
+				  .stream()
+				  .map(post -> PostResponse.fromEntity(post))
+				  .collect(Collectors.toList());
+		  
+		return Response.ok(listData).build();
 	}
 }
