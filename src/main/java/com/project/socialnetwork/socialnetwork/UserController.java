@@ -1,5 +1,6 @@
 package com.project.socialnetwork.socialnetwork;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -15,8 +16,8 @@ import javax.ws.rs.core.Response.Status;
 
 import com.project.socialnetwork.dto.CreateUserRequest;
 import com.project.socialnetwork.model.User;
+import com.project.socialnetwork.repository.UserRepository;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 
 @Path("/users")
@@ -24,6 +25,13 @@ import io.quarkus.hibernate.orm.panache.PanacheQuery;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserController {
    
+	@Inject
+	private UserRepository repository;
+	
+    public UserController(UserRepository repository) {
+    	this.repository = repository;
+ 	}
+	
 	@POST
 	@Transactional
 	public Response createUser(CreateUserRequest userRequest) {
@@ -31,13 +39,13 @@ public class UserController {
 		user.setName(userRequest.getName());
 		user.setAge(userRequest.getAge());
 		
-		user.persist();
+		repository.persist(user);
 		return Response.ok(user).build();
 	}
 	
 	@GET
 	public Response ListAllUsers() {
-		PanacheQuery<PanacheEntityBase> query = User.findAll();
+		PanacheQuery<User> query = repository.findAll();
 		return Response.ok(query.list()).build();
 	}
 	
@@ -45,10 +53,10 @@ public class UserController {
 	@Transactional
 	@Path("{id}")
 	public Response deleteUser(@PathParam("id") Long id) {
-	  User user = User.findById(id);
+	  User user = repository.findById(id);
 	  
 	  if(user != null) {
-		  user.delete();
+		  repository.delete(user);
 	  } else {
 		  return Response.status(Status.NOT_FOUND).build();
 	  }
@@ -59,7 +67,7 @@ public class UserController {
 	@Transactional
 	@Path("{id}")
 	public Response update(@PathParam("id")Long id, CreateUserRequest userData) {
-		User user = User.findById(id);
+		User user =  repository.findById(id);
 		
 		if(user != null) {
 			user.setName(userData.getName());
