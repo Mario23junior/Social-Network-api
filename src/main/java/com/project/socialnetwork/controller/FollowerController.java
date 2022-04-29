@@ -34,6 +34,13 @@ public class FollowerController {
 	@PUT
 	@Transactional
 	public Response followerUser(@PathParam("userId") Long userId ,FollowerRequest request) {
+		
+		if(userId.equals(request.getFollowerId())) {
+			return Response.status(Response.Status.CONFLICT)
+					.entity("you can't follow yourself")
+					.build();
+		}
+		
 		User user = userRepository.findById(userId);
 		if(user == null) {
 			return Response.status(Status.NOT_FOUND).build();
