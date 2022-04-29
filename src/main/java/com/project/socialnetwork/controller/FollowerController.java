@@ -1,6 +1,7 @@
 package com.project.socialnetwork.controller;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -21,16 +22,17 @@ import com.project.socialnetwork.repository.UserRepository;
 @Produces(MediaType.APPLICATION_JSON)
 public class FollowerController {
 
-	public FollowerRepository Followerepository;
+	public FollowerRepository followerepository;
 	public UserRepository userRepository;
     
 	@Inject
 	public FollowerController(FollowerRepository followerepository,UserRepository userRepository) {
-		this.Followerepository = followerepository;
+		this.followerepository = followerepository;
 		this.userRepository = userRepository;
 	}
 	
 	@PUT
+	@Transactional
 	public Response followerUser(@PathParam("userId") Long userId ,FollowerRequest request) {
 		User user = userRepository.findById(userId);
 		if(user == null) {
@@ -38,12 +40,17 @@ public class FollowerController {
 		} 
 		
 		User follower = userRepository.findById(request.getFollowerId());
+		Boolean follow =  followerepository.followsVeirific(follower, user);
 		
-		Follower entity = new Follower();
-		entity.setUser(user);
-		entity.setFollower(follower);
-		
+		if(!follow) {
+			Follower entity = new Follower();
+			entity.setUser(user);
+			entity.setFollower(follower);
+			followerepository.persist(entity);			
+		}    
 		return Response.status(Response.Status.NO_CONTENT).build();
+		
+	
 	}
 
 }
