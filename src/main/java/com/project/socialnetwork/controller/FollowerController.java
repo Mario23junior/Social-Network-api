@@ -1,8 +1,12 @@
 package com.project.socialnetwork.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -12,6 +16,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.project.socialnetwork.dto.FollowerRequest;
+import com.project.socialnetwork.dto.FollowersPerUserResponse;
+import com.project.socialnetwork.dto.followersResponse;
 import com.project.socialnetwork.model.Follower;
 import com.project.socialnetwork.model.User;
 import com.project.socialnetwork.repository.FollowerRepository;
@@ -56,8 +62,26 @@ public class FollowerController {
 			followerepository.persist(entity);			
 		}    
 		return Response.status(Response.Status.NO_CONTENT).build();
-		
+	}
 	
+	@GET
+	public Response lisFollowers(@PathParam("userId") Long userId) {
+		User user = userRepository.findById(userId);
+		if(user == null) {
+			return Response.status(Status.NOT_FOUND).build();
+		} 
+		
+		 List<Follower> followerCount = followerepository.findByUser(userId);
+		 FollowersPerUserResponse responseObjec = new FollowersPerUserResponse();
+		 responseObjec.setFollowersCount(followerCount.size());
+		 
+		 List<followersResponse> followerList = followerCount
+		 .stream()
+		 .map(followersResponse::new)
+		 .collect(Collectors.toList());
+		 
+		 responseObjec.setContent(followerList);
+		 return Response.ok(responseObjec).build();
 	}
 
 }
